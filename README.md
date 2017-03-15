@@ -7,6 +7,7 @@ Let's Encrypt certificates for Zimbra using acmetool in user (non-root) mode
 /opt/zimbra/bin/zmprov gs $(/opt/zimbra/bin/zmhostname) zimbraReverseProxyMailMode | grep Mode
 ~~~
 should be **https** and not **redirect**
+
 Zimbra should not use separate IP/port/certificate for each domain (but all of them using same IP/port/certificate)
 
 * requirement - working acmetool as user acme, for example:
@@ -42,7 +43,7 @@ git clone https://github.com/mnalis/acmetool-zimbra.git zcs-acmetool
 ~~~
 cd /opt/zcs-acmetool && make
 ~~~
-it will detect all the hostnames you use (you can check in all_domains.txt file and ) and request let's encrypt certificates
+it will auto-detect all the hostnames you use (you can check in *all_domains.txt* file) and request let's encrypt certificates for them
 
 * auto-renew
 ~~~
