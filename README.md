@@ -35,12 +35,12 @@ service apache2 reload
 * install:
 ~~~
 cd /opt
-git clone https://github.com/mnalis/acmetool-zimbra.git zsc-acmetool
+git clone https://github.com/mnalis/acmetool-zimbra.git zcs-acmetool
 ~~~
 
 * usage:
 ~~~
-cd /opt/zsc-acmetool && make
+cd /opt/zcs-acmetool && make
 ~~~
 it will detect all the hostnames you use (you can check in all_domains.txt file and ) and request let's encrypt certificates
 
