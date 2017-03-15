@@ -1,0 +1,4 @@
+#!/bin/sh
+# put in /etc/cron.daily
+# this will rebuild certificate (as root) if it got updated by acmetool (crontab -u acme)
+make --silent -C /opt/zsc-acmetool domain.crt

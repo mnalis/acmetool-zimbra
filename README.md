@@ -43,3 +43,8 @@ git clone https://github.com/mnalis/acmetool-zimbra.git zsc-acmetool
 cd /opt/zsc-acmetool && make
 ~~~
 it will detect all the hostnames you use (you can check in all_domains.txt file and ) and request let's encrypt certificates
+
+* auto-renew
+~~~
+cp example.cron /etc/cron.daily/zimbra-acmetool
+~~~
