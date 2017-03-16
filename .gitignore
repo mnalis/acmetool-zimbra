@@ -1,2 +1,6 @@
 *~
 backups/
+all_domains.txt
+domain.crt
+domain.key
+zimbra_chain.crt
