@@ -21,4 +21,9 @@ domain.crt: root.ca  $(ACMEDIR)/privkey $(ACMEDIR)/chain $(ACMEDIR)/cert
 	tar zcf backups/zimbra_ssl.$(DATETIME).tar.gz /opt/zimbra/ssl/zimbra
 	sudo -u zimbra sh -c 'cat domain.key > /opt/zimbra/ssl/zimbra/commercial/commercial.key'
 	sudo -u zimbra /opt/zimbra/bin/zmcertmgr deploycrt comm domain.crt zimbra_chain.crt
-	sudo -u zimbra /opt/zimbra/bin/zmcontrol restart || sudo -u zimbra /opt/zimbra/bin/zmcontrol start || sudo -u zimbra sh -c "sleep 2m; /opt/zimbra/bin/zmcontrol start"
+	#sudo -u zimbra /opt/zimbra/bin/zmcontrol restart || sudo -u zimbra /opt/zimbra/bin/zmcontrol start || sudo -u zimbra sh -c "sleep 2m; /opt/zimbra/bin/zmcontrol start"
+	sudo -u zimbra /opt/zimbra/bin/ldap restart
+	sudo -u zimbra /opt/zimbra/bin/zmproxyctl restart
+	sudo -u zimbra /opt/zimbra/bin/zmmailboxdctl restart
+	sudo -u zimbra /opt/zimbra/bin/zmmtactl restart
+	sudo -u zimbra /opt/zimbra/bin/zmstatctl start
