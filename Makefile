@@ -13,6 +13,7 @@ all_domains.txt:
 	sudo -u acme acmetool  want `cat all_domains.txt` 
 
 domain.crt: root.ca  $(ACMEDIR)/privkey $(ACMEDIR)/chain $(ACMEDIR)/cert
+	@echo "Using $(MAINHOST) as authorative certificate..."
 	cp $(ACMEDIR)/privkey domain.key
 	cp $(ACMEDIR)/cert domain.crt
 	cat $(ACMEDIR)/chain root.ca  > zimbra_chain.crt
