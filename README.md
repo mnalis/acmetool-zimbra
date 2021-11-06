@@ -1,6 +1,6 @@
 # acmetool-zimbra
 Let's Encrypt certificates for Zimbra using acmetool in user (non-root) mode
-* assumes zimbra 8.7.x (tested on 8.7.4 on Ubuntu)
+* assumes zimbra 8.7.x/8.8.x (tested on 8.8.15 on Ubuntu)
 
 * requirement - zimbra setup not to listen on port 80 (so apache can listen there)
 ~~~

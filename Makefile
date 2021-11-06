@@ -12,6 +12,9 @@ all_domains.txt:
 	sudo -u zimbra -i sh -c "(/opt/zimbra/bin/zmhostname; /opt/zimbra/bin/zmprov -l GetAllDomains | xargs -i /opt/zimbra/bin/zmprov -l getDomain {} zimbraVirtualHostname | grep zimbraVirtualHostname: | cut -f2 -d: )"> $@
 	sudo -u acme acmetool  want `cat all_domains.txt` 
 
+root.ca:
+	wget -q https://letsencrypt.org/certs/isrgrootx1.pem -O $@
+
 checkip: all_domains.txt
 	for ip in $$(getent hosts $$(cat all_domains.txt) | awk '{print $$1}'); do ip addr show | fgrep -q -w $$ip || awk "BEGIN {print \"FATAL: unknown ip $$ip\"; exit(1)}"; done
 
@@ -19,7 +22,8 @@ domain.crt: root.ca  $(ACMEDIR)/privkey $(ACMEDIR)/chain $(ACMEDIR)/cert all_dom
 	@echo "Using $(MAINHOST) as authorative certificate..."
 	cp $(ACMEDIR)/privkey domain.key
 	cp $(ACMEDIR)/cert domain.crt
-	cat $(ACMEDIR)/chain root.ca  > zimbra_chain.crt
+	sed -ne '1,/-----END CERTIFICATE-----/p' $(ACMEDIR)/chain > zimbra_chain.crt
+	cat root.ca >> zimbra_chain.crt
 	chown zimbra domain.key domain.crt zimbra_chain.crt
 	sudo -u zimbra /opt/zimbra/bin/zmcertmgr verifycrt comm domain.key domain.crt zimbra_chain.crt
 	test -d backups || mkdir backups
