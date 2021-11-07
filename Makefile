@@ -1,8 +1,8 @@
 all: clean checkip all_domains.txt domain.crt
 
 #ZBINDIR=/opt/zimbra/bin
-#MAINHOST=$(shell sudo -u zimbra -i $(ZBINDIR)zmhostname)
-MAINHOST=$(shell ls -1t /var/lib/acme/live/ | head -n 1)
+MAINHOST=$(shell sudo -u zimbra -i $(ZBINDIR)zmhostname)
+#MAINHOST=$(shell ls -1t /var/lib/acme/live/ | head -n 1)
 ACMEDIR=/var/lib/acme/live/$(MAINHOST)
 DATETIME=$(shell date "+%Y%m%d_%H%M%S")
 
