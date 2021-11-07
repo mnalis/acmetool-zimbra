@@ -7,7 +7,10 @@ ACMEDIR=/var/lib/acme/live/$(MAINHOST)
 DATETIME=$(shell date "+%Y%m%d_%H%M%S")
 
 clean:
-	rm -f all_domains.txt zimbra_chain.crt domain.crt domain.key root.ca
+	rm -f all_domains.txt zimbra_chain.crt domain.crt domain.key
+
+reallyclean: clean
+	rm -f root.ca
 	
 all_domains.txt:
 	sudo -u zimbra -i sh -c "($(ZBINDIR)zmhostname; $(ZBINDIR)zmprov -l GetAllDomains | xargs -i $(ZBINDIR)zmprov -l getDomain {} zimbraVirtualHostname | grep zimbraVirtualHostname: | cut -f2 -d: )"> $@
@@ -24,7 +27,7 @@ domain.crt: root.ca  $(ACMEDIR)/privkey $(ACMEDIR)/chain $(ACMEDIR)/cert all_dom
 	cp $(ACMEDIR)/privkey domain.key
 	cp $(ACMEDIR)/cert domain.crt
 	# if chain cointains expired "DST ROOT X3", manually force alternative chain (as acmetool 0.2.1-4+b5 does not support --prefered-chain)
-	sed -ne '/^-----END CERTIFICATE-----/,$$p' $(ACMEDIR)/chain | openssl x509 -noout -issuer -nameopt sname 2>/dev/null | fgrep -q '/CN=DST Root CA X3' && sed -ne '1,/^-----END CERTIFICATE-----/p' $(ACMEDIR)/chain root.ca > zimbra_chain.crt || cat $(ACMEDIR)/chain > zimbra_chain.crt
+	sed -ne '/^-----END CERTIFICATE-----/,$$p' $(ACMEDIR)/chain | openssl x509 -noout -issuer -nameopt sname 2>/dev/null | fgrep -q '/CN=DST Root CA X3' && (sed -ne '1,/^-----END CERTIFICATE-----/p' $(ACMEDIR)/chain; cat root.ca) > zimbra_chain.crt || cat $(ACMEDIR)/chain > zimbra_chain.crt
 	chown zimbra domain.key domain.crt zimbra_chain.crt
 	sudo -u zimbra $(ZBINDIR)zmcertmgr verifycrt comm domain.key domain.crt zimbra_chain.crt
 	test -d backups || mkdir backups
@@ -38,4 +41,4 @@ domain.crt: root.ca  $(ACMEDIR)/privkey $(ACMEDIR)/chain $(ACMEDIR)/cert all_dom
 	sudo -u zimbra -i $(ZBINDIR)zmmtactl restart
 	sudo -u zimbra -i $(ZBINDIR)zmstatctl start
 
-.PHONY: checkip clean all
+.PHONY: checkip clean reallyclean all
